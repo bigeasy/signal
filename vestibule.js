@@ -1,3 +1,5 @@
+var slice = [].slice
+
 function Vestibule () {
     this._waiting = []
 }
@@ -12,7 +14,7 @@ Vestibule.prototype.enter = function (callback) {
 }
 
 Vestibule.prototype.leave = function (cookie) {
-    for (var i = 0, I = this._waiting.lengt; i < I; i++) {
+    for (var i = 0, I = this._waiting.length; i < I; i++) {
         if (this._waiting[i].cookie === cookie) {
             this._waiting.splice(i, 1)
             break
