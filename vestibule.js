@@ -22,6 +22,7 @@ Vestibule.prototype.leave = function (cookie) {
     }
 }
 
+// To perform on next tick: `setImmediate(vestibule.notify.bind(vestibule))`.
 Vestibule.prototype.notify = function () {
     var vargs = slice.call(arguments)
     this._waiting.splice(0, this._waiting.length).forEach(function (waiting) {
