@@ -2,15 +2,20 @@ var slice = [].slice
 
 function Vestibule () {
     this._waiting = []
+    this.open = null
 }
 
 Vestibule.prototype.enter = function (callback) {
-    var cookie = {}
-    this._waiting.push({
-        cookie: cookie,
-        callback: callback
-    })
-    return cookie
+    if (this.open == null) {
+        var cookie = {}
+        this._waiting.push({
+            cookie: cookie,
+            callback: callback
+        })
+        return cookie
+    }
+    callback.apply(null, this.open)
+    return null
 }
 
 Vestibule.prototype.leave = function (cookie) {
@@ -22,7 +27,6 @@ Vestibule.prototype.leave = function (cookie) {
     }
 }
 
-// To perform on next tick: `setImmediate(vestibule.notify.bind(vestibule))`.
 Vestibule.prototype.notify = function () {
     var vargs = slice.call(arguments)
     this._waiting.splice(0, this._waiting.length).forEach(function (waiting) {
