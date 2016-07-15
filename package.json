@@ -2,7 +2,7 @@
     "name":               "vestibule",
     "description":        "A place for callbacks to wait util we're ready for them.",
     "author":             "Alan Gutierrez <alan@prettyrobots.com>",
-    "version":            "1.1.0",
+    "version":            "1.2.0",
     "keywords":
     [
                           "async", "asynchronous", "control", "flow",
