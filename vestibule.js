@@ -2,14 +2,14 @@ var slice = [].slice
 
 function Vestibule () {
     this._waiting = []
-    this.waiting = 0
+    this.occupied = false
     this.open = null
 }
 
 Vestibule.prototype.enter = function (callback) {
     if (this.open == null) {
         var cookie = {}
-        this.waiting++
+        this.occupied = true
         this._waiting.push({
             cookie: cookie,
             callback: callback
@@ -32,7 +32,7 @@ Vestibule.prototype.leave = function (cookie) {
 
 Vestibule.prototype.notify = function () {
     var vargs = slice.call(arguments)
-    this.waiting = 0
+    this.occupied = false
     this._waiting.splice(0, this._waiting.length).forEach(function (waiting) {
         waiting.callback.apply(null, vargs)
     })
