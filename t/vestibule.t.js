@@ -1,7 +1,7 @@
 require('proof')(2, prove)
 
 function prove (assert) {
-    var Vestibule = require('../..')
+    var Vestibule = require('..')
     var vestibule = new Vestibule
     var cookie = vestibule.enter(function () { throw new Error })
     vestibule.enter(function (one, two, three) {
