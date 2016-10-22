@@ -6,13 +6,21 @@ function Vestibule () {
     this.open = null
 }
 
-Vestibule.prototype.enter = function (callback) {
+Vestibule.prototype.enter = function (timeout, callback) {
+    if (callback == null) {
+        callback = timeout
+        timeout = null
+    }
     if (this.open == null) {
+        if (timeout != null) {
+            timeout = setTimeout(this.notify.bind(this), timeout)
+        }
         var cookie = {}
         this.occupied = true
         this._waiting.push({
             cookie: cookie,
-            callback: callback
+            callback: callback,
+            timeout: timeout
         })
         return cookie
     }
@@ -24,16 +32,19 @@ Vestibule.prototype.leave = function (cookie) {
     for (var i = 0, I = this._waiting.length; i < I; i++) {
         if (this._waiting[i].cookie === cookie) {
             this._waiting.splice(i, 1)
-            this.waiting--
             break
         }
     }
+    this.occupied = this._waiting.length != 0
 }
 
 Vestibule.prototype.notify = function () {
     var vargs = slice.call(arguments)
     this.occupied = false
     this._waiting.splice(0, this._waiting.length).forEach(function (waiting) {
+        if (waiting.timeout) {
+            clearTimeout(waiting.timeout)
+        }
         waiting.callback.apply(null, vargs)
     })
 }
