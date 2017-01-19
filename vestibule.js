@@ -29,13 +29,15 @@ Vestibule.prototype.enter = function (timeout, callback) {
 }
 
 Vestibule.prototype.leave = function (cookie) {
+    var left = null
     for (var i = 0, I = this._waiting.length; i < I; i++) {
         if (this._waiting[i].cookie === cookie) {
-            this._waiting.splice(i, 1)
+            left = this._waiting.splice(i, 1).shift()
             break
         }
     }
     this.occupied = this._waiting.length != 0
+    return left
 }
 
 Vestibule.prototype.notify = function () {
