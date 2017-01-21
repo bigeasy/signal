@@ -32,7 +32,7 @@ Vestibule.prototype.leave = function (cookie) {
     var left = null
     for (var i = 0, I = this._waiting.length; i < I; i++) {
         if (this._waiting[i].cookie === cookie) {
-            left = this._waiting.splice(i, 1).shift()
+            left = this._waiting.splice(i, 1).shift().callback
             break
         }
     }
