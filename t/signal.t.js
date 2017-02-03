@@ -1,21 +1,21 @@
 require('proof/redux')(3, prove)
 
 function prove (assert) {
-    var Vestibule = require('..')
-    var vestibule = new Vestibule
-    var cookie = vestibule.enter(function () { throw new Error })
-    vestibule.enter(function (error, one, two, three) {
+    var Signal = require('..')
+    var signal = new Signal
+    var cookie = signal.wait(function () { throw new Error })
+    signal.wait(function (error, one, two, three) {
         assert([ one, two, three ], [ 1, 2, 3 ], 'called')
     })
-    vestibule.leave(cookie)
-    vestibule.leave(cookie)
-    vestibule.notify(null, 1, 2, 3)
-    vestibule.enter(100, function (error, completed) {
+    signal.cancel(cookie)
+    signal.cancel(cookie)
+    signal.notify(null, 1, 2, 3)
+    signal.wait(100, function (error, completed) {
         assert(completed, 'timeout canceled')
     })
-    vestibule.notify(null, true)
-    vestibule.open = [ null, 1 ]
-    vestibule.enter(function (error, value) {
+    signal.notify(null, true)
+    signal.open = [ null, 1 ]
+    signal.wait(function (error, value) {
         assert(value, 1, 'open')
     })
 }

@@ -1,12 +1,12 @@
 var slice = [].slice
 
-function Vestibule () {
+function Signal () {
     this._waiting = []
     this.occupied = false
     this.open = null
 }
 
-Vestibule.prototype.enter = function (timeout, callback) {
+Signal.prototype.wait = function (timeout, callback) {
     if (callback == null) {
         callback = timeout
         timeout = null
@@ -28,7 +28,7 @@ Vestibule.prototype.enter = function (timeout, callback) {
     return null
 }
 
-Vestibule.prototype.leave = function (cookie) {
+Signal.prototype.cancel = function (cookie) {
     var left = null
     for (var i = 0, I = this._waiting.length; i < I; i++) {
         if (this._waiting[i].cookie === cookie) {
@@ -40,7 +40,7 @@ Vestibule.prototype.leave = function (cookie) {
     return left
 }
 
-Vestibule.prototype.notify = function () {
+Signal.prototype.notify = function () {
     var vargs = slice.call(arguments)
     this.occupied = false
     this._waiting.splice(0, this._waiting.length).forEach(function (waiting) {
@@ -51,4 +51,4 @@ Vestibule.prototype.notify = function () {
     })
 }
 
-module.exports = Vestibule
+module.exports = Signal
