@@ -1,9 +1,9 @@
 {
-    "name":                 "vestibule",
+    "name":                 "signal",
     "version":              "1.6.0",
     "description":
 
-      "A place for callbacks to wait util we're ready for them.",
+      "An evented semaphore.",
 
     "keywords":
     [
@@ -11,11 +11,11 @@
                             "cadence", "step", "callback"
     ],
     "author":               "Alan Gutierrez <alan@prettyrobots.com>",
-    "homepage":             "http://bigeasy.github.com/vestibule",
+    "homepage":             "http://bigeasy.github.io/signal",
     "license":              "MIT",
     "repository":
     {
-                            "url": "git://github.com/bigeasy/vestibule.git",
+                            "url": "git://github.com/bigeasy/signal.git",
                             "type": "git"
     },
     "dependencies":
@@ -25,9 +25,9 @@
     {
                             "proof":                        "1.2.x"
     },
-    "main":                 "vestibule.js",
+    "main":                 "signal.js",
     "scripts":
     {
-                            "test": "proof platform win32 && proof */*/*.t.js || t/test"
+                            "test": "proof platform win32 && proof */*.t.js || t/test"
     }
 }
