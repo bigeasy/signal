@@ -1,4 +1,4 @@
-require('proof/redux')(3, prove)
+require('proof/redux')(4, prove)
 
 function prove (assert) {
     var Signal = require('..')
@@ -14,6 +14,8 @@ function prove (assert) {
         assert(completed, 'timeout canceled')
     })
     signal.notify(null, true)
+    var cookie = signal.wait(1, function () { assert(true, 'timer canceled') })
+    signal.cancel(cookie)()
     signal.open = [ null, 1 ]
     signal.wait(function (error, value) {
         assert(value, 1, 'open')

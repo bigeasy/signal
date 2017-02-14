@@ -11,16 +11,17 @@ Signal.prototype.wait = function (timeout, callback) {
         callback = timeout
         timeout = null
     }
+    var timer = null
     if (this.open == null) {
         if (timeout != null) {
-            timeout = setTimeout(this.notify.bind(this), timeout)
+            timer = setTimeout(this.notify.bind(this), timeout)
         }
         var cookie = {}
         this.occupied = true
         this._waiting.push({
             cookie: cookie,
             callback: callback,
-            timeout: timeout
+            timeout: timer
         })
         return cookie
     }
@@ -32,12 +33,18 @@ Signal.prototype.cancel = function (cookie) {
     var left = null
     for (var i = 0, I = this._waiting.length; i < I; i++) {
         if (this._waiting[i].cookie === cookie) {
-            left = this._waiting.splice(i, 1).shift().callback
+            left = this._waiting.splice(i, 1).shift()
             break
         }
     }
     this.occupied = this._waiting.length != 0
-    return left
+    if (left == null) {
+        return null
+    }
+    if (left.timeout != null) {
+        clearTimeout(left.timeout)
+    }
+    return left.callback
 }
 
 Signal.prototype.notify = function () {
