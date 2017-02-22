@@ -58,4 +58,8 @@ Signal.prototype.notify = function () {
     })
 }
 
+Signal.prototype.unlatch = function () {
+    this.notify.apply(this, this.open = slice.call(arguments))
+}
+
 module.exports = Signal
