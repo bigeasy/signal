@@ -1,4 +1,4 @@
-var slice = [].slice
+var Operation = require('operation/variadic')
 
 function Signal () {
     this._waiting = []
@@ -6,12 +6,11 @@ function Signal () {
     this.open = null
 }
 
-Signal.prototype.wait = function (timeout, callback) {
-    if (callback == null) {
-        callback = timeout
-        timeout = null
-    }
+Signal.prototype.wait = function () {
+    var vargs = Array.prototype.slice.call(arguments)
+    var timeout = typeof vargs[0] == 'number' ? vargs.shift() : null
     var timer = null
+    var callback = Operation(vargs)
     if (this.open == null) {
         if (timeout != null) {
             timer = setTimeout(this.notify.bind(this), timeout)
@@ -48,7 +47,7 @@ Signal.prototype.cancel = function (cookie) {
 }
 
 Signal.prototype.notify = function () {
-    var vargs = slice.call(arguments)
+    var vargs = Array.prototype.slice.call(arguments)
     this.occupied = false
     this._waiting.splice(0, this._waiting.length).forEach(function (waiting) {
         if (waiting.timeout) {
@@ -59,7 +58,7 @@ Signal.prototype.notify = function () {
 }
 
 Signal.prototype.unlatch = function () {
-    this.notify.apply(this, this.open = slice.call(arguments))
+    this.notify.apply(this, this.open = Array.prototype.slice.call(arguments))
 }
 
 module.exports = Signal
