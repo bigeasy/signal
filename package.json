@@ -20,7 +20,7 @@
     },
     "dependencies":
     {
-                            "operation":                    "1.3.x"
+                            "operation":                    "1.4.x"
     },
     "devDependencies":
     {
