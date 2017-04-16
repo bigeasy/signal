@@ -1,4 +1,4 @@
-require('proof')(5, prove)
+require('proof')(7, prove)
 
 function prove (assert) {
     var Signal = require('..')
@@ -23,4 +23,13 @@ function prove (assert) {
     signal.wait(function (error, value) {
         assert(value, 1, 'open')
     })
+    signal = new Signal
+    signal.wait(function (error, value) {
+        assert(value, 2, 'notify will cancel')
+        signal.cancel(cancel)(null, value * 2)
+    })
+    var cancel = signal.wait(function (error, value) {
+        assert(value, 4, 'canceled during notify')
+    })
+    signal.notify(null, 2)
 }

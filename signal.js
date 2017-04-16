@@ -1,7 +1,7 @@
 var Operation = require('operation/variadic')
 
 function Signal () {
-    this._waiting = []
+    this._waiting = [[]]
     this.occupied = false
     this.open = null
 }
@@ -17,7 +17,7 @@ Signal.prototype.wait = function () {
         }
         var cookie = {}
         this.occupied = true
-        this._waiting.push({
+        this._waiting[0].push({
             cookie: cookie,
             callback: callback,
             timeout: timer
@@ -31,9 +31,11 @@ Signal.prototype.wait = function () {
 Signal.prototype.cancel = function (cookie) {
     var left = null
     for (var i = 0, I = this._waiting.length; i < I; i++) {
-        if (this._waiting[i].cookie === cookie) {
-            left = this._waiting.splice(i, 1).shift()
-            break
+        for (var j = 0, J = this._waiting[i].length; j < J; j++) {
+            if (this._waiting[i][j].cookie === cookie) {
+                left = this._waiting[i].splice(j, 1).shift()
+                break
+            }
         }
     }
     this.occupied = this._waiting.length != 0
@@ -49,11 +51,17 @@ Signal.prototype.cancel = function (cookie) {
 Signal.prototype.notify = function () {
     var vargs = Array.prototype.slice.call(arguments)
     this.occupied = false
-    this._waiting.splice(0, this._waiting.length).forEach(function (waiting) {
-        if (waiting.timeout) {
-            clearTimeout(waiting.timeout)
+    var waiting = this._waiting[0]
+    this._waiting.unshift([])
+    while (waiting.length != 0) {
+        if (waiting[0].timeout) {
+            clearTimeout(waiting[0].timeout)
         }
-        waiting.callback.apply(null, vargs)
+        waiting[0].callback.apply(null, vargs)
+        waiting.shift()
+    }
+    this._waiting = this._waiting.filter(function (waiting, index) {
+        return index == 0 || waiting.length > 0
     })
 }
 
