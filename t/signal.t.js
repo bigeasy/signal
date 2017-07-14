@@ -20,6 +20,7 @@ function prove (assert) {
         assert(value, 1, 'unlatch')
     })
     signal.unlatch(null, 1)
+    signal.unlatch()
     signal.wait(function (error, value) {
         assert(value, 1, 'open')
     })
