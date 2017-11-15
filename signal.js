@@ -71,4 +71,13 @@ Signal.prototype.unlatch = function () {
     }
 }
 
+Signal.first = function () {
+    var vargs = Array.prototype.slice.call(arguments)
+    var reducer = new Signal
+    reducer.wait(vargs.pop())
+    for (var i = 0, signal; (signal = vargs[i]) != null; i++) {
+        signal.wait(reducer, 'unlatch')
+    }
+}
+
 module.exports = Signal

@@ -1,4 +1,4 @@
-require('proof')(7, prove)
+require('proof')(8, prove)
 
 function prove (assert) {
     var Signal = require('..')
@@ -33,4 +33,13 @@ function prove (assert) {
         assert(value, 4, 'canceled during notify')
     })
     signal.notify(null, 2)
+
+    var first = new Signal
+    var second = new Signal
+
+    Signal.first(first, second, function (error, value) {
+        assert(value, 2, 'second')
+    })
+    second.unlatch(null, 2)
+    first.unlatch(null, 1)
 }
