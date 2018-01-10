@@ -98,7 +98,18 @@ Signal.prototype.notify = <span class="hljs-function"><span class="hljs-keyword"
 }
 
 Signal.prototype.unlatch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">this</span>.notify.apply(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>.open = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>))
+    <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.open == <span class="hljs-literal">null</span>) {
+        <span class="hljs-keyword">this</span>.notify.apply(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>.open = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>))
+    }
+}
+
+Signal.first = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> vargs = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>)
+    <span class="hljs-keyword">var</span> reducer = <span class="hljs-keyword">new</span> Signal
+    reducer.wait(vargs.pop())
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">var</span> i = <span class="hljs-number">0</span>, signal; (signal = vargs[i]) != <span class="hljs-literal">null</span>; i++) {
+        signal.wait(reducer, <span class="hljs-string">'unlatch'</span>)
+    }
 }
 
 <span class="hljs-built_in">module</span>.exports = Signal
