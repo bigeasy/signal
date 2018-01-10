@@ -15,7 +15,7 @@
     "license":              "MIT",
     "repository":
     {
-                            "url": "git://github.com/bigeasy/signal.git",
+                            "url": "bigeasy/signal",
                             "type": "git"
     },
     "dependencies":
