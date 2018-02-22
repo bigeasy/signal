@@ -54,11 +54,11 @@ Signal.prototype.notify = function () {
     var waiting = this._waiting[0]
     this._waiting.unshift([])
     while (waiting.length != 0) {
-        if (waiting[0].timeout) {
-            clearTimeout(waiting[0].timeout)
+        var waited = waiting.shift()
+        if (waited.timeout) {
+            clearTimeout(waited.timeout)
         }
-        waiting[0].callback.apply(null, vargs)
-        waiting.shift()
+        waited.callback.apply(null, vargs)
     }
     this._waiting = this._waiting.filter(function (waiting, index) {
         return index == 0 || waiting.length > 0
