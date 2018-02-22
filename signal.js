@@ -4,6 +4,9 @@ function Signal () {
     this._waiting = [[]]
     this.occupied = false
     this.open = null
+    if (arguments.length != 0) {
+        this.wait.apply(this, Array.prototype.slice.call(arguments))
+    }
 }
 
 Signal.prototype.wait = function () {

@@ -1,6 +1,6 @@
 {
     "name":                 "signal",
-    "version":              "3.2.1",
+    "version":              "3.4.0",
     "description":
 
       "An evented semaphore.",
@@ -15,7 +15,7 @@
     "license":              "MIT",
     "repository":
     {
-                            "url": "git://github.com/bigeasy/signal.git",
+                            "url": "bigeasy/signal",
                             "type": "git"
     },
     "dependencies":
