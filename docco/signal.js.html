@@ -36,6 +36,9 @@
     <span class="hljs-keyword">this</span>._waiting = [[]]
     <span class="hljs-keyword">this</span>.occupied = <span class="hljs-literal">false</span>
     <span class="hljs-keyword">this</span>.open = <span class="hljs-literal">null</span>
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">arguments</span>.length != <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">this</span>.wait.apply(<span class="hljs-keyword">this</span>, <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>))
+    }
 }
 
 Signal.prototype.wait = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
@@ -78,26 +81,138 @@ Signal.prototype.cancel = <span class="hljs-function"><span class="hljs-keyword"
         clearTimeout(left.timeout)
     }
     <span class="hljs-keyword">return</span> left.callback
-}
+}</pre></div></div>
 
-Signal.prototype.notify = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">var</span> vargs = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>)
-    <span class="hljs-keyword">this</span>.occupied = <span class="hljs-literal">false</span>
-    <span class="hljs-keyword">var</span> waiting = <span class="hljs-keyword">this</span>._waiting[<span class="hljs-number">0</span>]
-    <span class="hljs-keyword">this</span>._waiting.unshift([])
-    <span class="hljs-keyword">while</span> (waiting.length != <span class="hljs-number">0</span>) {
-        <span class="hljs-keyword">if</span> (waiting[<span class="hljs-number">0</span>].timeout) {
-            clearTimeout(waiting[<span class="hljs-number">0</span>].timeout)
+        </li>
+
+
+        <li id="section-2">
+            <div class="annotation">
+
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-2">&#182;</a>
+              </div>
+              <p>Notify listening waits.</p>
+
+            </div>
+
+        </li>
+
+
+        <li id="section-3">
+            <div class="annotation">
+
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-3">&#182;</a>
+              </div>
+
+            </div>
+
+            <div class="content"><div class='highlight'><pre>Signal.prototype.notify = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">var</span> vargs = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>)</pre></div></div>
+
+        </li>
+
+
+        <li id="section-4">
+            <div class="annotation">
+
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-4">&#182;</a>
+              </div>
+              <p>Dubious. No real use for it. Plus, it might as well be a count.</p>
+
+            </div>
+
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>.occupied = <span class="hljs-literal">false</span></pre></div></div>
+
+        </li>
+
+
+        <li id="section-5">
+            <div class="annotation">
+
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-5">&#182;</a>
+              </div>
+              <p>We shift a new array into waiting so that a notified function can wait on
+a subsequent notification. We do not pop it or replace it because we want
+our cancel function above to be able to find it and cancel it. We’re
+going to want to be able cancel both exiting waits and waits added during
+the notification.</p>
+
+            </div>
+
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">var</span> waiting = <span class="hljs-keyword">this</span>._waiting[<span class="hljs-number">0</span>]
+    <span class="hljs-keyword">this</span>._waiting.unshift([])</pre></div></div>
+
+        </li>
+
+
+        <li id="section-6">
+            <div class="annotation">
+
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-6">&#182;</a>
+              </div>
+              <p>We shift first so we don’t wreck the array if a wait tries to itself.</p>
+
+            </div>
+
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">while</span> (waiting.length != <span class="hljs-number">0</span>) {
+        <span class="hljs-keyword">var</span> waited = waiting.shift()
+        <span class="hljs-keyword">if</span> (waited.timeout !== <span class="hljs-literal">null</span>) {
+            clearTimeout(waited.timeout)
         }
-        waiting[<span class="hljs-number">0</span>].callback.apply(<span class="hljs-literal">null</span>, vargs)
-        waiting.shift()
-    }
-    <span class="hljs-keyword">this</span>._waiting = <span class="hljs-keyword">this</span>._waiting.filter(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">waiting, index</span>) </span>{
+        waited.callback.apply(<span class="hljs-literal">null</span>, vargs)
+    }</pre></div></div>
+
+        </li>
+
+
+        <li id="section-7">
+            <div class="annotation">
+
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-7">&#182;</a>
+              </div>
+              <p>Do not understand why this is necessary. Why can’t we just pop?</p>
+
+            </div>
+
+            <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._waiting = <span class="hljs-keyword">this</span>._waiting.filter(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">waiting, index</span>) </span>{
+        <span class="hljs-built_in">console</span>.log(waiting.length)
         <span class="hljs-keyword">return</span> index == <span class="hljs-number">0</span> || waiting.length &gt; <span class="hljs-number">0</span>
     })
-}
+}</pre></div></div>
 
-Signal.prototype.unlatch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
+        </li>
+
+
+        <li id="section-8">
+            <div class="annotation">
+
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-8">&#182;</a>
+              </div>
+              <p>Notify listening waits with arguments that will be immediately given to any
+subsequent waits.</p>
+
+            </div>
+
+        </li>
+
+
+        <li id="section-9">
+            <div class="annotation">
+
+              <div class="pilwrap ">
+                <a class="pilcrow" href="#section-9">&#182;</a>
+              </div>
+
+            </div>
+
+            <div class="content"><div class='highlight'><pre>Signal.prototype.unlatch = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>{
     <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.open == <span class="hljs-literal">null</span>) {
         <span class="hljs-keyword">this</span>.notify.apply(<span class="hljs-keyword">this</span>, <span class="hljs-keyword">this</span>.open = <span class="hljs-built_in">Array</span>.prototype.slice.call(<span class="hljs-built_in">arguments</span>))
     }
@@ -112,9 +227,7 @@ Signal.first = <span class="hljs-function"><span class="hljs-keyword">function</
     }
 }
 
-<span class="hljs-built_in">module</span>.exports = Signal
-
-</pre></div></div>
+<span class="hljs-built_in">module</span>.exports = Signal</pre></div></div>
 
         </li>
 
