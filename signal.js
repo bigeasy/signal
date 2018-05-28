@@ -58,7 +58,7 @@ Signal.prototype.notify = function () {
     this._waiting.unshift([])
     while (waiting.length != 0) {
         var waited = waiting.shift()
-        if (waited.timeout) {
+        if (waited.timeout !== null) {
             clearTimeout(waited.timeout)
         }
         waited.callback.apply(null, vargs)
