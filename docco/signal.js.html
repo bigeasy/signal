@@ -155,7 +155,7 @@ the notification.</p>
               <div class="pilwrap ">
                 <a class="pilcrow" href="#section-6">&#182;</a>
               </div>
-              <p>We shift first so we don’t wreck the array if a wait tries to itself.</p>
+              <p>We shift first so we don’t wreck the array if a wait cancels itself.</p>
 
             </div>
 
@@ -181,7 +181,6 @@ the notification.</p>
             </div>
 
             <div class="content"><div class='highlight'><pre>    <span class="hljs-keyword">this</span>._waiting = <span class="hljs-keyword">this</span>._waiting.filter(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">waiting, index</span>) </span>{
-        <span class="hljs-built_in">console</span>.log(waiting.length)
         <span class="hljs-keyword">return</span> index == <span class="hljs-number">0</span> || waiting.length &gt; <span class="hljs-number">0</span>
     })
 }</pre></div></div>
