@@ -79,7 +79,6 @@ Signal.prototype.notify = function () {
 
     // Do not understand why this is necessary. Why can't we just pop?
     this._waiting = this._waiting.filter(function (waiting, index) {
-        console.log(waiting.length)
         return index == 0 || waiting.length > 0
     })
 }
