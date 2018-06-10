@@ -68,7 +68,7 @@ Signal.prototype.notify = function () {
     var waiting = this._waiting[0]
     this._waiting.unshift([])
 
-    // We shift first so we don't wreck the array if a wait tries to itself.
+    // We shift first so we don't wreck the array if a wait cancels itself.
     while (waiting.length != 0) {
         var waited = waiting.shift()
         if (waited.timeout !== null) {
