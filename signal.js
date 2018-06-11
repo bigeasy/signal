@@ -1,7 +1,7 @@
 var Operation = require('operation/variadic')
 
 function Signal () {
-    this._waiting = [[]]
+    this._cancels = [this._waits = []]
     this.occupied = false
     this.open = null
     if (arguments.length != 0) {
@@ -20,7 +20,7 @@ Signal.prototype.wait = function () {
         }
         var cookie = {}
         this.occupied = true
-        this._waiting[0].push({
+        this._waits.push({
             cookie: cookie,
             callback: callback,
             timeout: timer
@@ -33,15 +33,15 @@ Signal.prototype.wait = function () {
 
 Signal.prototype.cancel = function (cookie) {
     var left = null
-    for (var i = 0, I = this._waiting.length; i < I; i++) {
-        for (var j = 0, J = this._waiting[i].length; j < J; j++) {
-            if (this._waiting[i][j].cookie === cookie) {
-                left = this._waiting[i].splice(j, 1).shift()
+    for (var i = 0, I = this._cancels.length; i < I; i++) {
+        for (var j = 0, J = this._cancels[i].length; j < J; j++) {
+            if (this._cancels[i][j].cookie === cookie) {
+                left = this._cancels[i].splice(j, 1).shift()
                 break
             }
         }
     }
-    this.occupied = this._waiting.length != 0
+    this.occupied = this._cancels.length != 0
     if (left == null) {
         return null
     }
@@ -65,22 +65,19 @@ Signal.prototype.notify = function () {
     // our cancel function above to be able to find it and cancel it. We're
     // going to want to be able cancel both exiting waits and waits added during
     // the notification.
-    var waiting = this._waiting[0]
-    this._waiting.unshift([])
+    var waits = this._waits
+    this._cancels.unshift(this._waits = [])
 
     // We shift first so we don't wreck the array if a wait cancels itself.
-    while (waiting.length != 0) {
-        var waited = waiting.shift()
+    while (waits.length != 0) {
+        var waited = waits.shift()
         if (waited.timeout !== null) {
             clearTimeout(waited.timeout)
         }
         waited.callback.apply(null, vargs)
     }
 
-    // Do not understand why this is necessary. Why can't we just pop?
-    this._waiting = this._waiting.filter(function (waiting, index) {
-        return index == 0 || waiting.length > 0
-    })
+    this._cancels.splice(this._cancels.indexOf(waits), 1)
 }
 
 // Notify listening waits with arguments that will be immediately given to any
