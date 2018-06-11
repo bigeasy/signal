@@ -2,7 +2,6 @@ var Operation = require('operation/variadic')
 
 function Signal () {
     this._cancels = [this._waits = []]
-    this.occupied = false
     this.open = null
     if (arguments.length != 0) {
         this.wait.apply(this, Array.prototype.slice.call(arguments))
@@ -19,7 +18,6 @@ Signal.prototype.wait = function () {
             timer = setTimeout(this.notify.bind(this), timeout)
         }
         var cookie = {}
-        this.occupied = true
         this._waits.push({
             cookie: cookie,
             callback: callback,
@@ -41,7 +39,6 @@ Signal.prototype.cancel = function (cookie) {
             }
         }
     }
-    this.occupied = this._cancels.length != 0
     if (left == null) {
         return null
     }
@@ -56,9 +53,6 @@ Signal.prototype.cancel = function (cookie) {
 //
 Signal.prototype.notify = function () {
     var vargs = Array.prototype.slice.call(arguments)
-
-    // Dubious. No real use for it. Plus, it might as well be a count.
-    this.occupied = false
 
     // We shift a new array into waiting so that a notified function can wait on
     // a subsequent notification. We do not pop it or replace it because we want
