@@ -1,4 +1,4 @@
-var Operation = require('operation/variadic')
+var Operation = require('operation')
 
 function Signal () {
     this._cancels = [this._waits = []]
