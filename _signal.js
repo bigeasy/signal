@@ -52,42 +52,26 @@ Signal.prototype.cancel = function (cookie) {
 
 //
 Signal.prototype.notify = function () {
-    if (this._waits.length != 0) {
-        var I = arguments.length
-        var vargs = new Array(I)
-        for (var i = 0; i < I; i++) {
-            vargs[i] = arguments[i]
-        }
-        // We shift a new array into waiting so that a notified function can
-        // wait on a subsequent notification. We do not pop it or replace it
-        // because we want our cancel function above to be able to find it and
-        // cancel it. We're going to want to be able cancel both exiting waits
-        // and waits added during the notification.
-        var waits = this._waits
-        this._cancels.unshift(this._waits = [])
+    var vargs = Array.prototype.slice.call(arguments)
 
-        // We shift first so we don't wreck the array if a wait cancels itself.
-        while (waits.length != 0) {
-            var waited = waits.shift()
-            if (waited.timeout !== null) {
-                clearTimeout(waited.timeout)
-            }
-            waited.callback.apply(null, vargs)
-        }
+    // We shift a new array into waiting so that a notified function can wait on
+    // a subsequent notification. We do not pop it or replace it because we want
+    // our cancel function above to be able to find it and cancel it. We're
+    // going to want to be able cancel both exiting waits and waits added during
+    // the notification.
+    var waits = this._waits
+    this._cancels.unshift(this._waits = [])
 
-        var i = 0
-        while (i < this._cancels.length) {
-            if (this._cancels[i] === waits) {
-                break
-            }
-            i++
+    // We shift first so we don't wreck the array if a wait cancels itself.
+    while (waits.length != 0) {
+        var waited = waits.shift()
+        if (waited.timeout !== null) {
+            clearTimeout(waited.timeout)
         }
-        while (i <= this._cancels.length - 1) {
-            this._cancels[i] = this._cancels[i + 1]
-            i++
-        }
-        this._cancels.length--
+        waited.callback.apply(null, vargs)
     }
+
+    this._cancels.splice(this._cancels.indexOf(waits), 1)
 }
 
 // Notify listening waits with arguments that will be immediately given to any
