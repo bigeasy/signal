@@ -52,8 +52,6 @@ Signal.prototype.cancel = function (cookie) {
 
 //
 Signal.prototype.notify = function () {
-    var vargs = Array.prototype.slice.call(arguments)
-
     // We shift a new array into waiting so that a notified function can wait on
     // a subsequent notification. We do not pop it or replace it because we want
     // our cancel function above to be able to find it and cancel it. We're
@@ -68,7 +66,7 @@ Signal.prototype.notify = function () {
         if (waited.timeout !== null) {
             clearTimeout(waited.timeout)
         }
-        waited.callback.apply(null, vargs)
+        waited.callback.apply(null, arguments)
     }
 
     this._cancels.splice(this._cancels.indexOf(waits), 1)

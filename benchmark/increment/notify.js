@@ -5,8 +5,8 @@ var Benchmark = require('benchmark')
 var suite = new Benchmark.Suite('call')
 
 function fn () {
+    var signal = new Signal
     return function () {
-        var signal = new Signal
         signal.wait(function () {})
         signal.wait(function () {})
         signal.wait(function () {})
@@ -15,8 +15,8 @@ function fn () {
 }
 
 function fn_ () {
+    var signal = new Signal_
     return function () {
-        var signal = new Signal_
         signal.wait(function () {})
         signal.wait(function () {})
         signal.wait(function () {})
