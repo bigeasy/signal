@@ -1,4 +1,4 @@
-var Operation = require('operation')
+var operation = require('operation')
 
 function Signal () {
     this._cancels = [this._waits = []]
@@ -12,7 +12,7 @@ Signal.prototype.wait = function () {
     var vargs = Array.prototype.slice.call(arguments)
     var timeout = typeof vargs[0] == 'number' ? vargs.shift() : null
     var timer = null
-    var callback = Operation(vargs)
+    var callback = operation.shift(vargs)
     if (this.open == null) {
         if (timeout != null) {
             timer = setTimeout(this.notify.bind(this), timeout)
