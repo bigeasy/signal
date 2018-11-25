@@ -1,10 +1,10 @@
 var operation = require('operation')
 
 function Signal () {
-    this._cancels = [this._waits = []]
+    this._cancels = [ this._waits = [] ]
     this.open = null
     if (arguments.length != 0) {
-        this.wait.apply(this, Array.prototype.slice.call(arguments))
+        this.wait.apply(this, arguments)
     }
 }
 
