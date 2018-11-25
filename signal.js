@@ -23,7 +23,6 @@ Signal.prototype.wait = function () {
 }
 
 Signal.prototype.cancel = function (cookie) {
-    var left = null
     for (var i = 0, I = this._cancels.length; i < I; i++) {
         for (var j = 0, J = this._cancels[i].length; j < J; j++) {
             if (this._cancels[i][j].cookie === cookie) {
