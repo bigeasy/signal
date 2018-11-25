@@ -8,8 +8,6 @@ function fn () {
     var signal = new Signal
     return function () {
         signal.wait(function () {})
-        signal.wait(function () {})
-        signal.wait(function () {})
         signal.notify(null, 1, 2, 3, 4, 5)
     }
 }
@@ -17,8 +15,6 @@ function fn () {
 function fn_ () {
     var signal = new Signal_
     return function () {
-        signal.wait(function () {})
-        signal.wait(function () {})
         signal.wait(function () {})
         signal.notify(null, 1, 2, 3, 4, 5)
     }

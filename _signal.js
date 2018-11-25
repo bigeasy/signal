@@ -9,7 +9,8 @@ function Signal () {
 }
 
 Signal.prototype.wait = function () {
-    var vargs = Array.prototype.slice.call(arguments)
+    var vargs = []
+    vargs.push.apply(vargs, arguments)
     var timeout = typeof vargs[0] == 'number' ? vargs.shift() : null
     var timer = null
     var callback = operation.shift(vargs)

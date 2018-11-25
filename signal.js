@@ -53,24 +53,26 @@ Signal.prototype.cancel = function (cookie) {
 
 //
 Signal.prototype.notify = function () {
-    // We shift a new array into waiting so that a notified function can wait on
-    // a subsequent notification. We do not pop it or replace it because we want
-    // our cancel function above to be able to find it and cancel it. We're
-    // going to want to be able cancel both exiting waits and waits added during
-    // the notification.
-    var waits = this._waits
-    this._cancels.unshift(this._waits = [])
+    if (this._waits.length != 0) {
+        // We shift a new array into waiting so that a notified function can
+        // wait on a subsequent notification. We do not pop it or replace it
+        // because we want our cancel function above to be able to find it and
+        // cancel it. We're going to want to be able cancel both exiting waits
+        // and waits added during the notification.
+        var waits = this._waits
+        this._cancels.unshift(this._waits = [])
 
-    // We shift first so we don't wreck the array if a wait cancels itself.
-    while (waits.length != 0) {
-        var waited = waits.shift()
-        if (waited.timeout !== null) {
-            clearTimeout(waited.timeout)
+        // We shift first so we don't wreck the array if a wait cancels itself.
+        while (waits.length != 0) {
+            var waited = waits.shift()
+            if (waited.timeout !== null) {
+                clearTimeout(waited.timeout)
+            }
+            waited.callback.apply(null, arguments)
         }
-        waited.callback.apply(null, arguments)
-    }
 
-    this._cancels.splice(this._cancels.indexOf(waits), 1)
+        this._cancels.splice(this._cancels.indexOf(waits), 1)
+    }
 }
 
 // Notify listening waits with arguments that will be immediately given to any
