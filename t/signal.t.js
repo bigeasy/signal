@@ -1,4 +1,4 @@
-require('proof')(9, prove)
+require('proof')(8, prove)
 
 function prove (okay) {
     var Signal = require('..')
@@ -33,15 +33,6 @@ function prove (okay) {
         okay(value, 4, 'canceled during notify')
     })
     signal.notify(null, 2)
-
-    var first = new Signal
-    var second = new Signal
-
-    Signal.first(first, second, function (error, value) {
-        okay(value, 2, 'second')
-    })
-    second.unlatch(null, 2)
-    first.unlatch(null, 1)
 
     var signal = new Signal(function () {
         okay(true, 'constructor wait')
