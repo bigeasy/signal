@@ -1,10 +1,10 @@
 var operation = require('operation')
 
 function Signal () {
-    this._cancels = [this._waits = []]
+    this._cancels = [ this._waits = [] ]
     this.open = null
     if (arguments.length != 0) {
-        this.wait.apply(this, Array.prototype.slice.call(arguments))
+        this.wait.apply(this, arguments)
     }
 }
 
@@ -79,15 +79,6 @@ Signal.prototype.notify = function () {
 Signal.prototype.unlatch = function () {
     if (this.open == null) {
         this.notify.apply(this, this.open = Array.prototype.slice.call(arguments))
-    }
-}
-
-Signal.first = function () {
-    var vargs = Array.prototype.slice.call(arguments)
-    var reducer = new Signal
-    reducer.wait(vargs.pop())
-    for (var i = 0, signal; (signal = vargs[i]) != null; i++) {
-        signal.wait(reducer, 'unlatch')
     }
 }
 
