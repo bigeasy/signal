@@ -71,7 +71,18 @@ Signal.prototype.notify = function () {
             waited.callback.apply(null, arguments)
         }
 
-        this._cancels.splice(this._cancels.indexOf(waits), 1)
+        var i = 0
+        while (i < this._cancels.length) {
+            if (this._cancels[i] === waits) {
+                break
+            }
+            i++
+        }
+        while (i <= this._cancels.length - 1) {
+            this._cancels[i] = this._cancels[i + 1]
+            i++
+        }
+        this._cancels.length--
     }
 }
 
