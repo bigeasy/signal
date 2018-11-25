@@ -29,9 +29,7 @@ function prove (okay) {
     })
     signal.notify(null, 2)
 
-    var signal = new Signal(function () {
-        okay(true, 'constructor wait')
-    })
+    var signal = new Signal(function () { okay('constructor wait') })
     signal.notify()
 
     var nested = new Signal(function () {
