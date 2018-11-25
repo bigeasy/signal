@@ -1,8 +1,9 @@
-require('proof')(6, prove)
+require('proof')(7, prove)
 
 function prove (okay) {
     var Signal = require('..')
     var signal = new Signal
+    signal.notify()
     var cookie = signal.wait(function () { throw new Error })
     signal.wait(function (error, one, two, three) {
         okay([ one, two, three ], [ 1, 2, 3 ], 'called')
@@ -32,4 +33,10 @@ function prove (okay) {
         okay(true, 'constructor wait')
     })
     signal.notify()
+
+    var nested = new Signal(function () {
+        nested.wait(function () { okay('nested') })
+        nested.notify()
+    })
+    nested.notify()
 }
