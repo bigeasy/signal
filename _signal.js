@@ -11,19 +11,10 @@ function Signal () {
 Signal.prototype.wait = function () {
     var vargs = []
     vargs.push.apply(vargs, arguments)
-    var timeout = typeof vargs[0] == 'number' ? vargs.shift() : null
-    var timer = null
     var callback = operation.shift(vargs)
     if (this.open == null) {
-        if (timeout != null) {
-            timer = setTimeout(this.notify.bind(this), timeout)
-        }
         var cookie = {}
-        this._waits.push({
-            cookie: cookie,
-            callback: callback,
-            timeout: timer
-        })
+        this._waits.push({ cookie: cookie, callback: callback })
         return cookie
     }
     callback.apply(null, this.open)
@@ -35,18 +26,11 @@ Signal.prototype.cancel = function (cookie) {
     for (var i = 0, I = this._cancels.length; i < I; i++) {
         for (var j = 0, J = this._cancels[i].length; j < J; j++) {
             if (this._cancels[i][j].cookie === cookie) {
-                left = this._cancels[i].splice(j, 1).shift()
-                break
+                return this._cancels[i].splice(j, 1).shift().callback
             }
         }
     }
-    if (left == null) {
-        return null
-    }
-    if (left.timeout != null) {
-        clearTimeout(left.timeout)
-    }
-    return left.callback
+    return null
 }
 
 // Notify listening waits.
@@ -65,9 +49,6 @@ Signal.prototype.notify = function () {
         // We shift first so we don't wreck the array if a wait cancels itself.
         while (waits.length != 0) {
             var waited = waits.shift()
-            if (waited.timeout !== null) {
-                clearTimeout(waited.timeout)
-            }
             waited.callback.apply(null, arguments)
         }
 

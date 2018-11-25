@@ -2,6 +2,7 @@ var operation = require('operation')
 
 function Signal () {
     this._cancels = [ this._waits = [] ]
+    this._cookie = 0
     this.open = null
     if (arguments.length != 0) {
         this.wait.apply(this, arguments)
@@ -13,7 +14,7 @@ Signal.prototype.wait = function () {
     vargs.push.apply(vargs, arguments)
     var callback = operation.shift(vargs)
     if (this.open == null) {
-        var cookie = {}
+        var cookie = this._cookie++
         this._waits.push({ cookie: cookie, callback: callback })
         return cookie
     }
