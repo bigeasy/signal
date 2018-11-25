@@ -92,7 +92,9 @@ Signal.prototype.notify = function () {
 //
 Signal.prototype.unlatch = function () {
     if (this.open == null) {
-        this.notify.apply(this, this.open = Array.prototype.slice.call(arguments))
+        this.open = []
+        this.open.push.apply(this.open, arguments)
+        this.notify.apply(this, this.open)
     }
 }
 

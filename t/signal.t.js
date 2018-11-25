@@ -1,4 +1,4 @@
-require('proof')(8, prove)
+require('proof')(6, prove)
 
 function prove (okay) {
     var Signal = require('..')
@@ -10,12 +10,6 @@ function prove (okay) {
     signal.cancel(cookie)
     signal.cancel(cookie)
     signal.notify(null, 1, 2, 3)
-    signal.wait(100, function (error, completed) {
-        okay(completed, 'timeout canceled')
-    })
-    signal.notify(null, true)
-    var cookie = signal.wait(1, function () { okay(true, 'timer canceled') })
-    signal.cancel(cookie)()
     signal.wait(function (error, value) {
         okay(value, 1, 'unlatch')
     })
