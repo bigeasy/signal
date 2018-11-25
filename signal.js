@@ -60,7 +60,7 @@ Signal.prototype.notify = function () {
         // cancel it. We're going to want to be able cancel both exiting waits
         // and waits added during the notification.
         var waits = this._waits
-        this._cancels.unshift(this._waits = [])
+        this._cancels.push(this._waits = [])
 
         // We shift first so we don't wreck the array if a wait cancels itself.
         while (waits.length != 0) {
