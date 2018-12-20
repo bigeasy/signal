@@ -1,6 +1,6 @@
 {
     "name":                 "signal",
-    "version":              "7.0.0",
+    "version":              "7.0.1",
     "description":
 
       "An evented semaphore.",
