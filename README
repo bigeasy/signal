@@ -1,0 +1,19 @@
+Ascension
+
+A place for callbacks to wait util we're ready for them.
+
+    Discussion:     https://github.com/bigeasy/signal/issues/1
+
+    Documentation:  https://bigeasy.github.io/signal
+    Source:         https://github.com/bigeasy/signal
+    Issues:         https://github.com/bigeasy/signal/issues
+    CI:             https://travis-ci.org/bigeasy/signal
+    Coverage:       https://coveralls.io/github/bigeasy/signal
+
+    Install:        `npm install signal`
+
+    License:        MIT
+
+To learn everything you want to know about Ascension start here:
+
+    http://bigeasy.github.io/signal
