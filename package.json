@@ -29,6 +29,6 @@
     "main":                 "signal.js",
     "scripts":
     {
-                            "test": "proof platform win32 && proof */*.t.js || t/test"
+                            "test": "proof test test/*.t.js"
     }
 }
