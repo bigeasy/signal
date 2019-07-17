@@ -1,5 +1,3 @@
-const operation = require('operation')
-
 class Signal {
     constructor () {
         this._cancels = [ this._waits = [] ]
@@ -10,10 +8,7 @@ class Signal {
         }
     }
 
-    wait () {
-        const vargs = []
-        vargs.push.apply(vargs, arguments)
-        const callback = operation.shift(vargs)
+    wait (callback) {
         if (this.open == null) {
             const cookie = this._cookie++
             this._waits.push({ cookie: cookie, callback: callback })
