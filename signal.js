@@ -1,4 +1,4 @@
-var operation = require('operation')
+const operation = require('operation')
 
 class Signal {
     constructor () {
@@ -11,11 +11,11 @@ class Signal {
     }
 
     wait () {
-        var vargs = []
+        const vargs = []
         vargs.push.apply(vargs, arguments)
-        var callback = operation.shift(vargs)
+        const callback = operation.shift(vargs)
         if (this.open == null) {
-            var cookie = this._cookie++
+            const cookie = this._cookie++
             this._waits.push({ cookie: cookie, callback: callback })
             return cookie
         }
@@ -24,8 +24,8 @@ class Signal {
     }
 
     cancel (cookie) {
-        for (var i = 0, I = this._cancels.length; i < I; i++) {
-            for (var j = 0, J = this._cancels[i].length; j < J; j++) {
+        for (let i = 0, I = this._cancels.length; i < I; i++) {
+            for (let j = 0, J = this._cancels[i].length; j < J; j++) {
                 if (this._cancels[i][j].cookie === cookie) {
                     return this._cancels[i].splice(j, 1).shift().callback
                 }
@@ -44,16 +44,16 @@ class Signal {
             // because we want our cancel function above to be able to find it and
             // cancel it. We're going to want to be able cancel both exiting waits
             // and waits added during the notification.
-            var waits = this._waits
+            const waits = this._waits
             this._cancels.push(this._waits = [])
 
             // We shift first so we don't wreck the array if a wait cancels itself.
             while (waits.length != 0) {
-                var waited = waits.shift()
+                const waited = waits.shift()
                 waited.callback.apply(null, arguments)
             }
 
-            var i = 0
+            let i = 0
             while (i < this._cancels.length) {
                 if (this._cancels[i] === waits) {
                     break
